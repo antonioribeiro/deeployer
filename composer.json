@@ -1,0 +1,25 @@
+{
+    "name": "pragmarx/deeployer",
+    "description": "",
+    "authors": [
+        {
+            "name": "Antonio Carlos Ribeiro",
+            "email": "acr@antoniocarlosribeiro.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.7",
+        "illuminate/support": "4.*"
+    },
+
+    "require-dev": {
+        "mockery/mockery": "0.8.0"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "PragmaRX\\Deeployer\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
