@@ -22,6 +22,8 @@
 namespace PragmaRX\Deeployer;
 
 use PragmaRX\Deeployer\Support\Config;
+use PragmaRX\Deeployer\Deployers\Github;
+use PragmaRX\Deeployer\Deployers\Bitbucket;
 
 use Illuminate\Http\Request;
 
@@ -31,16 +33,29 @@ class Deeployer
 
 	private $request;
 
+	private $github;
+
+	private $bitbucket;
+
 	/**
 	 * Initialize Deeployer object
 	 * 
 	 * @param Locale $locale
 	 */
-	public function __construct(Config $config,	Request $request)
+	public function __construct(
+									Config $config,	
+									Request $request,
+									Github $github,
+									Bitbucket $bitbucket
+								)
 	{
 		$this->config = $config;
 
 		$this->request = $request;
+
+		$this->github = $github;
+
+		$this->bitbucket = $bitbucket;
 	}
 
 	public function run()

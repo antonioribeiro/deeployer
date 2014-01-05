@@ -4,6 +4,8 @@ use PragmaRX\Deeployer\Deeployer;
 
 use PragmaRX\Deeployer\Support\Config;
 use PragmaRX\Deeployer\Support\Filesystem;
+use PragmaRX\Deeployer\Deployers\Github;
+use PragmaRX\Deeployer\Deployers\Bitbucket;
 
 use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
 use Illuminate\Foundation\AliasLoader as IlluminateAliasLoader;
@@ -24,7 +26,7 @@ class ServiceProvider extends IlluminateServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('pragmarx/deeployer', 'pragmarx/deeployer', __DIR__.'/../../../..');
+		$this->package('pragmarx/deeployer', 'pragmarx/deeployer', __DIR__.'/../..');
 
 		if( $this->getConfig('create_deeployer_alias') )
 		{
@@ -45,6 +47,10 @@ class ServiceProvider extends IlluminateServiceProvider {
 		$this->registerFileSystem();
 
 		$this->registerConfig();
+
+		$this->registerGithub();
+
+		$this->registerBitbucket();
 
 		$this->registerDeeployer();
 	}
@@ -85,6 +91,22 @@ class ServiceProvider extends IlluminateServiceProvider {
 		});
 	}
 
+	private function registerGithub()
+	{
+		$this->app['deeployer.github'] = $this->app->share(function($app)
+		{
+			return new Github($app['request']->all());
+		});
+	}
+
+	private function registerBitbucket()
+	{
+		$this->app['deeployer.bitbucket'] = $this->app->share(function($app)
+		{
+			return new Bitbucket($app['request']->all());
+		});
+	}
+
 	/**
 	 * Takes all the components of Deeployer and glues them
 	 * together to create Deeployer.
@@ -97,7 +119,12 @@ class ServiceProvider extends IlluminateServiceProvider {
 		{
 			$app['deeployer.loaded'] = true;
 
-			return new Deeployer($app['deeployer.config'], $app['request']);
+			return new Deeployer(
+									$app['deeployer.config'], 
+									$app['request'],
+									$app['deeployer.github'], 
+									$app['deeployer.bitbucket']
+								);
 		});
 	}
 

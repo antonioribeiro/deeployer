@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 /**
  * Part of the Deeployer package.
@@ -19,10 +19,10 @@
  * @link       http://pragmarx.com
  */
 
-namespace PragmaRX\Deeployer\Support;
+namespace PragmaRX\Deeployer\Deployers;
 
-use Illuminate\Filesystem\Filesystem as IlluminateFilesystem;
+interface DeployerInterface {
 
-class Filesystem extends IlluminateFilesystem {
+	public function deploy($payload);
 
 }

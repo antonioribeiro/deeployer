@@ -1,4 +1,5 @@
-<?php namespace PragmaRX\Deeployer\Support;
+<?php
+
 /**
  * Part of the Deeployer package.
  *
@@ -17,6 +18,8 @@
  * @copyright  (c) 2013, PragmaRX
  * @link       http://pragmarx.com
  */
+
+namespace PragmaRX\Deeployer\Support;
 
 use PragmaRX\Deeployer\Support\Filesystem;
 
