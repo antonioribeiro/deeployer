@@ -22,6 +22,7 @@
 namespace PragmaRX\Deeployer;
 
 use PragmaRX\Deeployer\Support\Config;
+
 use PragmaRX\Deeployer\Deployers\Github;
 use PragmaRX\Deeployer\Deployers\Bitbucket;
 
@@ -56,6 +57,8 @@ class Deeployer
 		$this->config = $config;
 
 		$this->request = $request;
+
+		$this->git = $git;
 
 		$this->github = $github;
 

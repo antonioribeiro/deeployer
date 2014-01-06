@@ -5,6 +5,7 @@ use PragmaRX\Deeployer\Deeployer;
 use PragmaRX\Deeployer\Support\Config;
 use PragmaRX\Deeployer\Support\Filesystem;
 use PragmaRX\Deeployer\Support\Composer;
+use PragmaRX\Deeployer\Support\Git;
 
 use PragmaRX\Deeployer\Deployers\Github;
 use PragmaRX\Deeployer\Deployers\Bitbucket;
@@ -51,6 +52,8 @@ class ServiceProvider extends IlluminateServiceProvider {
 		$this->registerConfig();
 
 		$this->registerComposer();
+
+		$this->registerGit();
 
 		$this->registerGithub();
 
@@ -103,11 +106,23 @@ class ServiceProvider extends IlluminateServiceProvider {
 		});
 	}
 
+	private function registerGit()
+	{
+		$this->app['deeployer.git'] = $this->app->share(function($app)
+		{
+			return new Git;
+		});
+	}
+
 	private function registerGithub()
 	{
 		$this->app['deeployer.github'] = $this->app->share(function($app)
 		{
-			return new Github($app['deeployer.config'], $app['deeployer.composer']);
+			return new Github(
+								$app['deeployer.config'], 
+								$app['deeployer.git'], 
+								$app['deeployer.composer']
+							);
 		});
 	}
 
@@ -115,7 +130,11 @@ class ServiceProvider extends IlluminateServiceProvider {
 	{
 		$this->app['deeployer.bitbucket'] = $this->app->share(function($app)
 		{
-			return new Bitbucket($app['deeployer.config'], $app['deeployer.composer']);
+			return new Bitbucket(
+									$app['deeployer.config'], 
+									$app['deeployer.git'], 
+									$app['deeployer.composer']
+								);
 		});
 	}
 

@@ -21,8 +21,8 @@
 
 namespace PragmaRX\Deeployer\Support;
 
-use SebastianBergmann\Git as SebastianBergmannGit;
+use GitWrapper\GitWrapper;
 
-class Git extends SebastianBergmannGit {
+class Git extends GitWrapper {
 
 }

@@ -25,6 +25,7 @@ namespace PragmaRX\Deeployer\Deployers;
 
 use PragmaRX\Deeployer\Support\Config;
 use PragmaRX\Deeployer\Support\Composer;
+use PragmaRX\Deeployer\Support\Git;
 
 abstract class Deployer implements DeployerInterface {
 
@@ -32,9 +33,13 @@ abstract class Deployer implements DeployerInterface {
 
 	private $config;
 
-	public function __construct(Config $config, Composer $composer)
+	public function __construct(Config $config, Git $git, Composer $composer)
 	{
 		$this->config = $config;
+
+		$this->composer = $composer;
+
+		$this->git = $git;
 	}
 
 	public function deploy($payload)
