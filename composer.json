@@ -1,4 +1,4 @@
-{
+{ 
     "name": "pragmarx/deeployer",
     "description": "",
     "authors": [
@@ -9,7 +9,9 @@
     ],
     "require": {
         "php": ">=5.3.7",
-        "illuminate/support": "4.*"
+        "illuminate/foundation": "4.*",
+        "illuminate/support": "4.*",
+        "sebastian/git": "1.0.*"
     },
 
     "require-dev": {

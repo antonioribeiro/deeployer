@@ -1,9 +1,11 @@
 <?php namespace PragmaRX\Deeployer\Vendor\Laravel;
-
+ 
 use PragmaRX\Deeployer\Deeployer;
 
 use PragmaRX\Deeployer\Support\Config;
 use PragmaRX\Deeployer\Support\Filesystem;
+use PragmaRX\Deeployer\Support\Composer;
+
 use PragmaRX\Deeployer\Deployers\Github;
 use PragmaRX\Deeployer\Deployers\Bitbucket;
 
@@ -48,6 +50,8 @@ class ServiceProvider extends IlluminateServiceProvider {
 
 		$this->registerConfig();
 
+		$this->registerComposer();
+
 		$this->registerGithub();
 
 		$this->registerBitbucket();
@@ -91,11 +95,19 @@ class ServiceProvider extends IlluminateServiceProvider {
 		});
 	}
 
+	private function registerComposer()
+	{
+		$this->app['deeployer.composer'] = $this->app->share(function($app)
+		{
+			return new Composer($app['deeployer.fileSystem']);
+		});
+	}
+
 	private function registerGithub()
 	{
 		$this->app['deeployer.github'] = $this->app->share(function($app)
 		{
-			return new Github($app['request']->all());
+			return new Github($app['deeployer.config'], $app['deeployer.composer']);
 		});
 	}
 
@@ -103,7 +115,7 @@ class ServiceProvider extends IlluminateServiceProvider {
 	{
 		$this->app['deeployer.bitbucket'] = $this->app->share(function($app)
 		{
-			return new Bitbucket($app['request']->all());
+			return new Bitbucket($app['deeployer.config'], $app['deeployer.composer']);
 		});
 	}
 

@@ -23,24 +23,75 @@
 
 namespace PragmaRX\Deeployer\Deployers;
 
+use PragmaRX\Deeployer\Support\Config;
+use PragmaRX\Deeployer\Support\Composer;
+
 abstract class Deployer implements DeployerInterface {
+
+	private $payload;
+
+	private $config;
+
+	public function __construct(Config $config, Composer $composer)
+	{
+		$this->config = $config;
+	}
 
 	public function deploy($payload)
 	{
+		$this->payload = $payload;
+
 	    return $this->execute();
 	}
 
 	protected function execute()
 	{
-	    $name = $this->payload->repository->name;
+	    $repository = $this->payload->repository->name;
 
 	    $branch = basename( $this->payload->ref );
-	    $commit = substr( $this->payload->commits[0]->id, 0, 12 );
-    
-	    if ( isset( parent::$repos[ $name ] ) && parent::$repos[ $name ]['branch'] === $branch ) {
-	            $data = parent::$repos[ $name ];
-	            $data['commit'] = $commit;
-	            parent::__construct( $name, $data );
-	    }		
+ 
+	    foreach($this->config->get('projects') as $project)
+	    {
+	    	if ($project['repository'] == $repository && $project['branch'] == $branch)
+	    	{
+	    		$this->updateRepository($project);
+	    	}
+	    }
+	}
+
+	public function updateRepository($project)
+	{
+		$this->pull($project);
+
+		$this->composerUpdate($project);
+	}
+
+	protected function pull($project)
+	{
+		 // $this->git->pull()
+	}
+
+	protected function composerUpdate($project)
+	{
+		if ( ! $project['update_composer'])
+		{
+			return false;
+		}
+
+		$this->composer->setWorkingPath($project['directory']);
+
+		$this->composer->update();
+
+        if ($project['composer_dump_autoload'])
+        {
+            if ($project['composer_optimize'])
+            {
+                $this->composer->dumpOptimized(); 
+            }
+            else
+            {
+                $this->composer->dumpAutoloads(); 
+            }
+        }
 	}
 }

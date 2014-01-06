@@ -32,7 +32,7 @@ use Log;
 class Deeployer
 {
 	private $config;
-
+ 
 	private $request;
 
 	private $github;
@@ -69,8 +69,6 @@ class Deeployer
 		$service = $this->getServiceName();
 
 		$service->deploy($this->payload);
-
-		Log::info($class);
 	}
 
 	protected function decodePayload($payload)
