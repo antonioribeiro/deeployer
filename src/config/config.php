@@ -24,4 +24,21 @@ return array(
 
 	'deeployer_alias' => 'Deeployer',
 
+	'projects' => array(
+							array(
+									'repository' => 'https://github.com/antonioribeiro/deeployer.git',
+
+									'remote' => 'origin',
+
+									'branch' => 'master',
+
+									'directory' => '/tmp/deeployer',
+
+									'update_composer' => true,
+
+									'composer_dump_autoload' => true,
+
+									'composer_optimize' => true,
+								),
+						),
 );

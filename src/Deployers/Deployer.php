@@ -29,63 +29,65 @@ use PragmaRX\Deeployer\Support\Git;
 
 abstract class Deployer implements DeployerInterface {
 
-	private $payload;
+    private $payload;
 
-	private $config;
+    private $config;
 
-	public function __construct(Config $config, Git $git, Composer $composer)
-	{
-		$this->config = $config;
+    public function __construct(Config $config, Git $git, Composer $composer)
+    {
+        $this->config = $config;
 
-		$this->composer = $composer;
+        $this->composer = $composer;
 
-		$this->git = $git;
-	}
+        $this->git = $git;
+    }
 
-	public function deploy($payload)
-	{
-		$this->payload = $payload;
+    public function deploy($payload)
+    {
+        $this->payload = $payload;
 
-	    return $this->execute();
-	}
+        return $this->execute();
+    }
 
-	protected function execute()
-	{
-	    $repository = $this->payload->repository->name;
+    protected function execute()
+    {
+        $repository = $this->payload->repository->name;
 
-	    $branch = basename( $this->payload->ref );
+        $branch = basename( $this->payload->ref );
  
-	    foreach($this->config->get('projects') as $project)
-	    {
-	    	if ($project['repository'] == $repository && $project['branch'] == $branch)
-	    	{
-	    		$this->updateRepository($project);
-	    	}
-	    }
-	}
+        foreach($this->config->get('projects') as $project)
+        {
+            if ($project['repository'] == $repository && $project['branch'] == $branch)
+            {
+                $this->updateRepository($project);
+            }
+        }
+    }
 
-	public function updateRepository($project)
-	{
-		$this->pull($project);
+    public function updateRepository($project)
+    {
+        $this->pull($project);
 
-		$this->composerUpdate($project);
-	}
+        $this->composerUpdate($project);
+    }
 
-	protected function pull($project)
-	{
-		 // $this->git->pull()
-	}
+    protected function pull($project)
+    {
+        $this->git->setDirectory($project['directory']);
 
-	protected function composerUpdate($project)
-	{
-		if ( ! $project['update_composer'])
-		{
-			return false;
-		}
+        return $this->git->pull($project['remote'], $project['branch']);
+    }
 
-		$this->composer->setWorkingPath($project['directory']);
+    protected function composerUpdate($project)
+    {
+        if ( ! $project['update_composer'])
+        {
+            return false;
+        }
 
-		$this->composer->update();
+        $this->composer->setWorkingPath($project['directory']);
+
+        $this->composer->update();
 
         if ($project['composer_dump_autoload'])
         {
@@ -98,5 +100,5 @@ abstract class Deployer implements DeployerInterface {
                 $this->composer->dumpAutoloads(); 
             }
         }
-	}
+    }
 }
