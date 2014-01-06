@@ -23,11 +23,6 @@
 
 namespace PragmaRX\Deeployer\Deployers;
 
-class Github implements DeployerInterface {
-
-	public function deploy($payload)
-	{
-		
-	}
+class Github extends Deployer {
 
 }

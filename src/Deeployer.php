@@ -27,6 +27,8 @@ use PragmaRX\Deeployer\Deployers\Bitbucket;
 
 use Illuminate\Http\Request;
 
+use Log;
+
 class Deeployer
 {
 	private $config;
@@ -36,6 +38,8 @@ class Deeployer
 	private $github;
 
 	private $bitbucket;
+
+	private $payload;
 
 	/**
 	 * Initialize Deeployer object
@@ -56,10 +60,36 @@ class Deeployer
 		$this->github = $github;
 
 		$this->bitbucket = $bitbucket;
+
+		$this->payload = $this->decodePayload($this->request->get('payload'));
 	}
 
 	public function run()
 	{
-		return $this->request->all();
+		$service = $this->getServiceName();
+
+		$service->deploy($this->payload);
+
+		Log::info($class);
+	}
+
+	protected function decodePayload($payload)
+	{
+		return json_decode( $payload );
+	}
+
+	public function getServiceName()
+	{
+		if (strpos($this->payload->repository->url, 'github') > 0)
+		{
+			return $this->github;
+		}
+		else
+		if (strpos($this->payload->repository->url, 'bitbucket') > 0)
+		{
+			return $this->bitbucket;
+		}
+
+		return false;
 	}
 }

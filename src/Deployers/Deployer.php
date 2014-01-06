@@ -23,6 +23,24 @@
 
 namespace PragmaRX\Deeployer\Deployers;
 
-class Bitbucket extends Deployer {
+abstract class Deployer implements DeployerInterface {
 
+	public function deploy($payload)
+	{
+	    return $this->execute();
+	}
+
+	protected function execute()
+	{
+	    $name = $this->payload->repository->name;
+
+	    $branch = basename( $this->payload->ref );
+	    $commit = substr( $this->payload->commits[0]->id, 0, 12 );
+    
+	    if ( isset( parent::$repos[ $name ] ) && parent::$repos[ $name ]['branch'] === $branch ) {
+	            $data = parent::$repos[ $name ];
+	            $data['commit'] = $commit;
+	            parent::__construct( $name, $data );
+	    }		
+	}
 }
