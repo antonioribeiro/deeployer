@@ -26,7 +26,7 @@ return array(
 
 	'projects' => array(
 							array(
-									'repository' => 'https://github.com/antonioribeiro/deeployer.git',
+									'repository' => 'https://github.com/antonioribeiro/deeployer',
 
 									'remote' => 'origin',
 

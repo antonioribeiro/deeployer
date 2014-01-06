@@ -51,12 +51,15 @@ abstract class Deployer implements DeployerInterface {
 
     protected function execute()
     {
-        $repository = $this->payload->repository->name;
+        $repository = $this->payload->repository->url;
 
         $branch = basename( $this->payload->ref );
  
         foreach($this->config->get('projects') as $project)
         {
+            var_dump($project['repository']);
+            var_dump($repository);
+
             if ($project['repository'] == $repository && $project['branch'] == $branch)
             {
                 $this->updateRepository($project);
@@ -66,7 +69,11 @@ abstract class Deployer implements DeployerInterface {
 
     public function updateRepository($project)
     {
+        var_dump('pull');
+
         $this->pull($project);
+
+        var_dump('composer update');
 
         $this->composerUpdate($project);
     }
@@ -84,6 +91,8 @@ abstract class Deployer implements DeployerInterface {
         {
             return false;
         }
+
+        $this->composer->setEnvVar('COMPOSER_HOME', '/tmp/.composer');
 
         $this->composer->setWorkingPath($project['directory']);
 

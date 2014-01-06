@@ -58,8 +58,6 @@ class Deeployer
 
 		$this->request = $request;
 
-		$this->git = $git;
-
 		$this->github = $github;
 
 		$this->bitbucket = $bitbucket;

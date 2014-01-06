@@ -25,18 +25,66 @@ use Illuminate\Foundation\Composer as IlluminateComposer;
 
 class Composer extends IlluminateComposer {
 
+    protected $environment = array();
+
+    protected $process;
+
+    protected $error;
+
     public function update($extra = '')
     {
-        $this->command('update', $extra);
+        return $this->command('update', $extra);
     }
 
     public function command($command, $extra = '')
     {
-        $process = $this->getProcess();
+        $this->newProcess();
 
-        $process->setCommandLine(trim($this->findComposer()." $command ".$extra));
+        $this->configureEnv();
 
-        $process->run();
+        $this->process->setCommandLine(trim($this->findComposer()." $command ".$extra));
+
+        $this->process->run();
+
+        if( !$this->process->isSuccessful())
+        {
+            $this->setError($this->process->getErrorOutput());
+
+            return false;
+        }
+
+        return true;
     }
 
+    public function newProcess()
+    {
+        $this->process = $this->getProcess();
+    }
+
+    public function setEnvVar($variable, $value)
+    {
+        $this->environment[$variable] = $value;
+    }
+
+    private function configureEnv()
+    {
+        $env = $this->process->getEnv();
+
+        foreach ($this->environment as $key => $value) {
+            $env[$key] = $value;
+        }
+
+        $this->process->setEnv($env);
+    }
+
+    private function setError($error)
+    {
+        $this->error = $error;
+    }
+
+    public function getError()
+    {
+        return $this->error;
+    }
+    
 }
