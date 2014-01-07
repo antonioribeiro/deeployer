@@ -24,8 +24,9 @@
 namespace PragmaRX\Deeployer\Deployers;
 
 use PragmaRX\Deeployer\Support\Config;
-use PragmaRX\Deeployer\Support\Composer;
 use PragmaRX\Deeployer\Support\Git;
+use PragmaRX\Deeployer\Support\Composer;
+use PragmaRX\Deeployer\Support\Artisan;
 
 abstract class Deployer implements DeployerInterface {
 
@@ -33,13 +34,21 @@ abstract class Deployer implements DeployerInterface {
 
     private $config;
 
-    public function __construct(Config $config, Git $git, Composer $composer)
+    private $git;
+
+    private $composer;
+
+    private $artisan;
+
+    public function __construct(Config $config, Git $git, Composer $composer, Artisan $artisan)
     {
         $this->config = $config;
 
+        $this->git = $git;
+
         $this->composer = $composer;
 
-        $this->git = $git;
+        $this->artisan = $artisan;
     }
 
     public function deploy($payload)
@@ -57,9 +66,6 @@ abstract class Deployer implements DeployerInterface {
  
         foreach($this->config->get('projects') as $project)
         {
-            var_dump($project['repository']);
-            var_dump($repository);
-
             if ($project['repository'] == $repository && $project['branch'] == $branch)
             {
                 $this->updateRepository($project);
@@ -69,13 +75,11 @@ abstract class Deployer implements DeployerInterface {
 
     public function updateRepository($project)
     {
-        var_dump('pull');
-
         $this->pull($project);
 
-        var_dump('composer update');
+        $this->runComposer($project);
 
-        $this->composerUpdate($project);
+        $this->runArtisan($project);
     }
 
     protected function pull($project)
@@ -85,18 +89,16 @@ abstract class Deployer implements DeployerInterface {
         return $this->git->pull($project['remote'], $project['branch']);
     }
 
-    protected function composerUpdate($project)
+    protected function runComposer($project)
     {
-        if ( ! $project['update_composer'])
-        {
-            return false;
-        }
-
         $this->composer->setEnvVar('COMPOSER_HOME', '/tmp/.composer');
 
         $this->composer->setWorkingPath($project['directory']);
 
-        $this->composer->update();
+        if ($project['update_composer'])
+        {
+            $this->composer->update();
+        }
 
         if ($project['composer_dump_autoload'])
         {
@@ -110,4 +112,17 @@ abstract class Deployer implements DeployerInterface {
             }
         }
     }
+
+    protected function runArtisan($project)
+    {
+        if ( ! $project['artisan_migrate'])
+        {
+            return false;
+        }
+
+        $this->artisan->setWorkingPath($project['directory']);
+
+        $this->artisan->migrate();
+    }
+
 }

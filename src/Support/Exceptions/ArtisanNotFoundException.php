@@ -1,7 +1,7 @@
 <?php
 
-PragmaRX\Deeployer\Support\Exceptions;
+namespace PragmaRX\Deeployer\Support\Exceptions;
 
 use Exception;
 
-class ArtisanNotFoundException extends Exceptio {}
+class ArtisanNotFoundException extends Exception {}

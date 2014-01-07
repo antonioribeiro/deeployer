@@ -28,7 +28,7 @@ class Composer extends Execute {
         return $this->command('update', $extra);
     }
 
-    private function findSoftware()
+    protected function findSoftware()
     {
         return $this->findComposer();
     }

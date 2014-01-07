@@ -34,11 +34,13 @@ return array(
 
                                     'directory' => '/tmp/deeployer',
 
-                                    'update_composer' => true,
+                                    'update_composer' => false,
 
                                     'composer_dump_autoload' => true,
 
                                     'composer_optimize' => true,
+
+                                    'artisan_migrate' => false,
                                 ),
                         ),
 );

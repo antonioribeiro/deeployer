@@ -28,7 +28,7 @@ class Artisan extends Execute {
         return $this->command('migrate', $extra);
     }
 
-    private function findSoftware()
+    function findSoftware()
     {
         $artisan = $this->workingPath.'/artisan';
 

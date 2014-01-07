@@ -31,8 +31,6 @@ abstract class Execute extends IlluminateComposer {
 
     protected $error;
 
-    private function findSoftware() {}
-
     public function update($extra = '')
     {
         return $this->command('update', $extra);
@@ -52,8 +50,14 @@ abstract class Execute extends IlluminateComposer {
         {
             $this->setError($this->process->getErrorOutput());
 
+            var_dump('ERROR!!!!! - '.$this->process->getCommandLine());
+            var_dump($this->process->getErrorOutput());
+
             return false;
         }
+
+        var_dump('SUCCESS - '.$this->process->getCommandLine());
+        var_dump($this->process->getOutput());
 
         return true;
     }
@@ -76,7 +80,11 @@ abstract class Execute extends IlluminateComposer {
             $env[$key] = $value;
         }
 
-        $this->process->setEnv($env);
+        if ($env)
+        {
+            $this->process->setEnv($env);    
+        }
+        
     }
 
     private function setError($error)
