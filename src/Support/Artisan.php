@@ -21,16 +21,23 @@
  
 namespace PragmaRX\Deeployer\Support;
 
-class Composer extends Execute {
+class Artisan extends Execute {
 
-    public function update($extra = '')
+    public function migrate($extra = '')
     {
-        return $this->command('update', $extra);
+        return $this->command('migrate', $extra);
     }
 
     private function findSoftware()
     {
-        return $this->findComposer();
+    	$artisan = $this->workingPath.'/artisan';
+
+		if ($this->files->exists($artisan))
+		{
+			return 'php '.$artisan;
+		}
+		
+		return false;
     }
 
 }
