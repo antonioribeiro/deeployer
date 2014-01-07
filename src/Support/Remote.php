@@ -21,14 +21,25 @@
 
 namespace PragmaRX\Deeployer\Support;
 
-use GitWrapper\GitWrapper;
+use Illuminate\Remote\RemoteManager as IlluminateRemote;
 
-class Git extends Remote {
-
-    public function pull($remote, $branch, $force = false)
+class Remote extends IlluminateRemote {
+	
+    public function setConnection($connection)
     {
-    	$force = $force ? '--force' : '';
+        $this->connection = $connection;
+    }
 
-        $this->command("git pull $remote $branch $force");
+    public function setDirectory($directory)
+    {
+        $this->directory = $directory;
+    }
+
+    public function command($command)
+    {
+    	$this->into($this->connection)->run(array(
+				    'cd '.$this->directory,
+				    $command,
+				));
     }
 }

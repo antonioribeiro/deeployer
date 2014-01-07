@@ -26,6 +26,8 @@ return array(
 
     'projects' => array(
                             array(
+                                    'ssh_connection' => 'production',
+
                                     'repository' => 'https://github.com/antonioribeiro/deeployer',
 
                                     'remote' => 'origin',
@@ -36,7 +38,7 @@ return array(
 
                                     'update_composer' => false,
 
-                                    'composer_dump_autoload' => true,
+                                    'composer_dump_autoload' => false,
 
                                     'composer_optimize' => true,
 

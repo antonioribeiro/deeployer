@@ -4,6 +4,7 @@ use PragmaRX\Deeployer\Deeployer;
 
 use PragmaRX\Deeployer\Support\Config;
 use PragmaRX\Deeployer\Support\Filesystem;
+use PragmaRX\Deeployer\Support\Remote;
 use PragmaRX\Deeployer\Support\Composer;
 use PragmaRX\Deeployer\Support\Artisan;
 use PragmaRX\Deeployer\Support\Git;
@@ -52,11 +53,13 @@ class ServiceProvider extends IlluminateServiceProvider {
 
         $this->registerConfig();
 
+        $this->registerRemote();
+
+        $this->registerGit();
+
         $this->registerComposer();
 
         $this->registerArtisan();
-
-        $this->registerGit();
 
         $this->registerGithub();
 
@@ -101,6 +104,14 @@ class ServiceProvider extends IlluminateServiceProvider {
         });
     }
 
+    private function registerRemote()
+    {
+        $this->app['deeployer.remote'] = $this->app->share(function($app)
+        {
+            return new Remote($app);
+        });
+    }
+
     private function registerComposer()
     {
         $this->app['deeployer.composer'] = $this->app->share(function($app)
@@ -131,6 +142,7 @@ class ServiceProvider extends IlluminateServiceProvider {
         {
             return new Github(
                                 $app['deeployer.config'], 
+                                $app['deeployer.remote'],
                                 $app['deeployer.git'], 
                                 $app['deeployer.composer'],
                                 $app['deeployer.artisan']
@@ -144,7 +156,8 @@ class ServiceProvider extends IlluminateServiceProvider {
         {
             return new Bitbucket(
                                     $app['deeployer.config'], 
-                                    $app['deeployer.git'], 
+                                    $app['deeployer.remote'],
+                                    $app['deeployer.git'],
                                     $app['deeployer.composer'],
                                     $app['deeployer.artisan']
                                 );

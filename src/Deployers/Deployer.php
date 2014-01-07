@@ -27,6 +27,7 @@ use PragmaRX\Deeployer\Support\Config;
 use PragmaRX\Deeployer\Support\Git;
 use PragmaRX\Deeployer\Support\Composer;
 use PragmaRX\Deeployer\Support\Artisan;
+use PragmaRX\Deeployer\Support\Remote;
 
 abstract class Deployer implements DeployerInterface {
 
@@ -34,15 +35,19 @@ abstract class Deployer implements DeployerInterface {
 
     private $config;
 
+    private $remote;
+
     private $git;
 
     private $composer;
 
     private $artisan;
 
-    public function __construct(Config $config, Git $git, Composer $composer, Artisan $artisan)
+    public function __construct(Config $config, Remote $remote, Git $git, Composer $composer, Artisan $artisan)
     {
         $this->config = $config;
+
+        $this->remote = $remote;
 
         $this->git = $git;
 
@@ -84,6 +89,8 @@ abstract class Deployer implements DeployerInterface {
 
     protected function pull($project)
     {
+        $this->git->setConnection($project['ssh_connection']);
+
         $this->git->setDirectory($project['directory']);
 
         return $this->git->pull($project['remote'], $project['branch']);
