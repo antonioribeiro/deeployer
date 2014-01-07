@@ -25,60 +25,60 @@ use PragmaRX\Deeployer\Support\Filesystem;
 
 class Config {
 
-	protected $config;
+    protected $config;
 
-	protected $isAppConfig = false;
+    protected $isAppConfig = false;
 
-	/**
-	 * Create a new configuration repository
-	 * 
-	 * @param Filesystem $files 
-	 * @param void
-	 */
-	public function __construct(Filesystem $files, $app = null)
-	{
-		$this->app = $app;
+    /**
+     * Create a new configuration repository
+     * 
+     * @param Filesystem $files 
+     * @param void
+     */
+    public function __construct(Filesystem $files, $app = null)
+    {
+        $this->app = $app;
 
-		$this->files = $files;
+        $this->files = $files;
 
-		$this->loadConfig();
-	}
+        $this->loadConfig();
+    }
 
-	/**
-	 * Get the specified configuration value
-	 * @param  string $key     
-	 * @param  string $default value
-	 * @return string
-	 */
-	public function get($key, $default = null)
-	{
-		if($this->isAppConfig)
-		{
-			return $this->app['config']["pragmarx/deeployer::$key"]; // is there a better way than hard coding this?
-		}
+    /**
+     * Get the specified configuration value
+     * @param  string $key     
+     * @param  string $default value
+     * @return string
+     */
+    public function get($key, $default = null)
+    {
+        if($this->isAppConfig)
+        {
+            return $this->app['config']["pragmarx/deeployer::$key"]; // is there a better way than hard coding this?
+        }
 
-		if ( ! isset($this->config[$key]))
-		{
-			return $default;
-		}
+        if ( ! isset($this->config[$key]))
+        {
+            return $default;
+        }
 
-		return $this->config[$key];
-	}
+        return $this->config[$key];
+    }
 
-	/**
-	 * Load the configuration group
-	 * 
-	 * @return void
-	 */
-	public function loadConfig()
-	{
-		if (isset($this->app) && $this->app['config'])
-		{
-			$this->isAppConfig = true;
-		}
-		else
-		{
-			$this->config = $this->files->getRequire(__DIR__.'/../../../config/config.php');
-		}
-	}
+    /**
+     * Load the configuration group
+     * 
+     * @return void
+     */
+    public function loadConfig()
+    {
+        if (isset($this->app) && $this->app['config'])
+        {
+            $this->isAppConfig = true;
+        }
+        else
+        {
+            $this->config = $this->files->getRequire(__DIR__.'/../../../config/config.php');
+        }
+    }
 }

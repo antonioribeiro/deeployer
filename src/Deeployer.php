@@ -32,63 +32,63 @@ use Log;
 
 class Deeployer
 {
-	private $config;
+    private $config;
  
-	private $request;
+    private $request;
 
-	private $github;
+    private $github;
 
-	private $bitbucket;
+    private $bitbucket;
 
-	private $payload;
+    private $payload;
 
-	/**
-	 * Initialize Deeployer object
-	 * 
-	 * @param Locale $locale
-	 */
-	public function __construct(
-									Config $config,	
-									Request $request,
-									Github $github,
-									Bitbucket $bitbucket
-								)
-	{
-		$this->config = $config;
+    /**
+     * Initialize Deeployer object
+     * 
+     * @param Locale $locale
+     */
+    public function __construct(
+                                    Config $config,    
+                                    Request $request,
+                                    Github $github,
+                                    Bitbucket $bitbucket
+                                )
+    {
+        $this->config = $config;
 
-		$this->request = $request;
+        $this->request = $request;
 
-		$this->github = $github;
+        $this->github = $github;
 
-		$this->bitbucket = $bitbucket;
+        $this->bitbucket = $bitbucket;
 
-		$this->payload = $this->decodePayload($this->request->get('payload'));
-	}
+        $this->payload = $this->decodePayload($this->request->get('payload'));
+    }
 
-	public function run()
-	{
-		$service = $this->getServiceName();
+    public function run()
+    {
+        $service = $this->getServiceName();
 
-		$service->deploy($this->payload);
-	}
+        $service->deploy($this->payload);
+    }
 
-	protected function decodePayload($payload)
-	{
-		return json_decode( $payload );
-	}
+    protected function decodePayload($payload)
+    {
+        return json_decode( $payload );
+    }
 
-	public function getServiceName()
-	{
-		if (strpos($this->payload->repository->url, 'github') > 0)
-		{
-			return $this->github;
-		}
-		else
-		if (strpos($this->payload->repository->url, 'bitbucket') > 0)
-		{
-			return $this->bitbucket;
-		}
+    public function getServiceName()
+    {
+        if (strpos($this->payload->repository->url, 'github') > 0)
+        {
+            return $this->github;
+        }
+        else
+        if (strpos($this->payload->repository->url, 'bitbucket') > 0)
+        {
+            return $this->bitbucket;
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

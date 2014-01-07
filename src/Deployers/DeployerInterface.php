@@ -23,6 +23,6 @@ namespace PragmaRX\Deeployer\Deployers;
 
 interface DeployerInterface {
 
-	public function deploy($payload);
+    public function deploy($payload);
 
 }

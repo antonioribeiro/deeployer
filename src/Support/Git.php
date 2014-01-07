@@ -25,15 +25,15 @@ use GitWrapper\GitWrapper;
 
 class Git extends GitWrapper {
 
-	private $workingCopy;
+    private $workingCopy;
 
-	public function setDirectory($directory)
-	{
-		$this->workingCopy = $this->workingCopy($directory);
-	}
+    public function setDirectory($directory)
+    {
+        $this->workingCopy = $this->workingCopy($directory);
+    }
 
-	public function pull($remote, $branch)
-	{
-		$this->workingCopy->pull($remote, $branch);
-	}
+    public function pull($remote, $branch)
+    {
+        $this->workingCopy->pull($remote, $branch);
+    }
 }

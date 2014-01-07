@@ -30,14 +30,14 @@ class Artisan extends Execute {
 
     private function findSoftware()
     {
-    	$artisan = $this->workingPath.'/artisan';
+        $artisan = $this->workingPath.'/artisan';
 
-		if ($this->files->exists($artisan))
-		{
-			return 'php '.$artisan;
-		}
-		
-		return false;
+        if ($this->files->exists($artisan))
+        {
+            return 'php '.$artisan;
+        }
+        
+        throw new Exceptions\ArtisanNotFoundException('No Artisan found at '.$this->workingPath);
     }
 
 }

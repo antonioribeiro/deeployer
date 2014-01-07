@@ -20,25 +20,25 @@
 
 return array(
 
-	'create_deeployer_alias' => true,
+    'create_deeployer_alias' => true,
 
-	'deeployer_alias' => 'Deeployer',
+    'deeployer_alias' => 'Deeployer',
 
-	'projects' => array(
-							array(
-									'repository' => 'https://github.com/antonioribeiro/deeployer',
+    'projects' => array(
+                            array(
+                                    'repository' => 'https://github.com/antonioribeiro/deeployer',
 
-									'remote' => 'origin',
+                                    'remote' => 'origin',
 
-									'branch' => 'master',
+                                    'branch' => 'master',
 
-									'directory' => '/tmp/deeployer',
+                                    'directory' => '/tmp/deeployer',
 
-									'update_composer' => true,
+                                    'update_composer' => true,
 
-									'composer_dump_autoload' => true,
+                                    'composer_dump_autoload' => true,
 
-									'composer_optimize' => true,
-								),
-						),
+                                    'composer_optimize' => true,
+                                ),
+                        ),
 );
