@@ -21,23 +21,16 @@
  
 namespace PragmaRX\Deeployer\Support;
 
-class Artisan extends Execute {
+class Artisan extends Remote {
 
     public function migrate($extra = '')
     {
-        return $this->command('migrate', $extra);
+        $this->command("php artisan migrate $extra");
     }
 
-    function findSoftware()
+    public function seed($extra = '')
     {
-        $artisan = $this->workingPath.'/artisan';
-
-        if ($this->files->exists($artisan))
-        {
-            return 'php '.$artisan;
-        }
-        
-        throw new Exceptions\ArtisanNotFoundException('No Artisan found at '.$this->workingPath);
+        $this->command("php artisan db:seed $extra");
     }
 
 }

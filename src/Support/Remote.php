@@ -25,6 +25,8 @@ use Illuminate\Remote\RemoteManager as IlluminateRemote;
 
 class Remote extends IlluminateRemote {
 	
+    public $messages = array();
+
     public function setConnection($connection)
     {
         $this->connection = $connection;
@@ -40,6 +42,15 @@ class Remote extends IlluminateRemote {
     	$this->into($this->connection)->run(array(
 				    'cd '.$this->directory,
 				    $command,
-				));
+				), function($line)
+                    {
+                        $this->messages[] = $line;
+                    });
     }
+
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
 }

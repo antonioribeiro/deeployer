@@ -31,4 +31,5 @@ class Git extends Remote {
 
         $this->command("git pull $remote $branch $force");
     }
+    
 }

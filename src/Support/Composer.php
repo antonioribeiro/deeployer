@@ -21,16 +21,21 @@
  
 namespace PragmaRX\Deeployer\Support;
 
-class Composer extends Execute {
+class Composer extends Remote {
 
     public function update($extra = '')
     {
-        return $this->command('update', $extra);
+        $this->command("composer update $extra");
     }
 
-    protected function findSoftware()
+    public function dumpAutoload($extra = '')
     {
-        return $this->findComposer();
+        $this->command("composer dump-autoload $extra");
+    }
+
+    public function dumpOptimized($extra = '')
+    {
+        $this->dumpAutoload("--optimize $extra");
     }
 
 }

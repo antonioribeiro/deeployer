@@ -116,7 +116,7 @@ class ServiceProvider extends IlluminateServiceProvider {
     {
         $this->app['deeployer.composer'] = $this->app->share(function($app)
         {
-            return new Composer($app['deeployer.fileSystem']);
+            return new Composer($app);
         });
     }
 
@@ -124,7 +124,7 @@ class ServiceProvider extends IlluminateServiceProvider {
     {
         $this->app['deeployer.artisan'] = $this->app->share(function($app)
         {
-            return new Artisan($app['deeployer.fileSystem']);
+            return new Artisan($app);
         });
     }
 
@@ -132,7 +132,7 @@ class ServiceProvider extends IlluminateServiceProvider {
     {
         $this->app['deeployer.git'] = $this->app->share(function($app)
         {
-            return new Git;
+            return new Git($app);
         });
     }
 
@@ -142,7 +142,7 @@ class ServiceProvider extends IlluminateServiceProvider {
         {
             return new Github(
                                 $app['deeployer.config'], 
-                                $app['deeployer.remote'],
+                                $app['log'], 
                                 $app['deeployer.git'], 
                                 $app['deeployer.composer'],
                                 $app['deeployer.artisan']
@@ -156,7 +156,7 @@ class ServiceProvider extends IlluminateServiceProvider {
         {
             return new Bitbucket(
                                     $app['deeployer.config'], 
-                                    $app['deeployer.remote'],
+	                                $app['log'], 
                                     $app['deeployer.git'],
                                     $app['deeployer.composer'],
                                     $app['deeployer.artisan']
@@ -178,6 +178,7 @@ class ServiceProvider extends IlluminateServiceProvider {
 
             return new Deeployer(
                                     $app['deeployer.config'], 
+                                    $app['log'],
                                     $app['request'],
                                     $app['deeployer.github'], 
                                     $app['deeployer.bitbucket']

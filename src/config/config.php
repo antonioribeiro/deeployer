@@ -36,9 +36,7 @@ return array(
 
                                     'directory' => '/tmp/deeployer',
 
-                                    'update_composer' => false,
-
-                                    'composer_dump_autoload' => false,
+                                    'composer_update' => true,
 
                                     'composer_optimize' => true,
 

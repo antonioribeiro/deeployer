@@ -27,12 +27,13 @@ use PragmaRX\Deeployer\Deployers\Github;
 use PragmaRX\Deeployer\Deployers\Bitbucket;
 
 use Illuminate\Http\Request;
-
-use Log;
+use Illuminate\Log\Writer;
 
 class Deeployer
 {
     private $config;
+
+    private $log;
  
     private $request;
 
@@ -49,12 +50,15 @@ class Deeployer
      */
     public function __construct(
                                     Config $config,    
+                                    Writer $log,
                                     Request $request,
                                     Github $github,
                                     Bitbucket $bitbucket
                                 )
     {
         $this->config = $config;
+
+        $this->log = $log;
 
         $this->request = $request;
 

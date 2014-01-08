@@ -29,13 +29,15 @@ use PragmaRX\Deeployer\Support\Composer;
 use PragmaRX\Deeployer\Support\Artisan;
 use PragmaRX\Deeployer\Support\Remote;
 
+use Illuminate\Log\Writer;
+
 abstract class Deployer implements DeployerInterface {
 
     private $payload;
 
     private $config;
 
-    private $remote;
+    private $log;
 
     private $git;
 
@@ -43,11 +45,13 @@ abstract class Deployer implements DeployerInterface {
 
     private $artisan;
 
-    public function __construct(Config $config, Remote $remote, Git $git, Composer $composer, Artisan $artisan)
+    private $messages;
+
+    public function __construct(Config $config, Writer $log, Git $git, Composer $composer, Artisan $artisan)
     {
         $this->config = $config;
 
-        $this->remote = $remote;
+        $this->log = $log;
 
         $this->git = $git;
 
@@ -73,51 +77,59 @@ abstract class Deployer implements DeployerInterface {
         {
             if ($project['repository'] == $repository && $project['branch'] == $branch)
             {
-                $this->updateRepository($project);
+                $this->message(sprintf(
+                                        'deploying repository: %s branch: %s', 
+                                        $project['repository'], 
+                                        $project['branch']
+                                     )
+                                );
+
+                $this->executeAll($project);
             }
         }
     }
 
-    public function updateRepository($project)
+    public function executeAll($project)
     {
-        $this->pull($project);
+        $this->runGit($project);
 
         $this->runComposer($project);
 
         $this->runArtisan($project);
     }
 
-    protected function pull($project)
+    protected function runGit($project)
     {
         $this->git->setConnection($project['ssh_connection']);
 
         $this->git->setDirectory($project['directory']);
 
-        return $this->git->pull($project['remote'], $project['branch']);
+        $this->message('executing git pull...');
+
+        $this->git->pull($project['remote'], $project['branch']);
+
+        $this->logMessages($this->git->getMessages());
     }
 
     protected function runComposer($project)
     {
-        $this->composer->setEnvVar('COMPOSER_HOME', '/tmp/.composer');
+        $this->composer->setConnection($project['ssh_connection']);
 
-        $this->composer->setWorkingPath($project['directory']);
+        $this->composer->setDirectory($project['directory']);
 
-        if ($project['update_composer'])
+        if ($project['composer_update'])
         {
+            $this->message('executing composer update...');
             $this->composer->update();
         }
 
-        if ($project['composer_dump_autoload'])
+        if ($project['composer_optimize'])
         {
-            if ($project['composer_optimize'])
-            {
-                $this->composer->dumpOptimized(); 
-            }
-            else
-            {
-                $this->composer->dumpAutoloads(); 
-            }
+            $this->message('executing composer dump-autoload --optimize...');
+            $this->composer->dumpOptimized(); 
         }
+
+        $this->logMessages($this->composer->getMessages());
     }
 
     protected function runArtisan($project)
@@ -127,9 +139,33 @@ abstract class Deployer implements DeployerInterface {
             return false;
         }
 
-        $this->artisan->setWorkingPath($project['directory']);
+        $this->artisan->setConnection($project['ssh_connection']);
+
+        $this->artisan->setDirectory($project['directory']);
+
+        $this->message('executing artisan migrate...');
 
         $this->artisan->migrate();
+
+        $this->logMessages($this->artisan->getMessages());
+    }
+
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
+    private function logMessages($messages)
+    {
+        foreach($messages as $message)
+        {
+            $this->message($message);
+        }
+    }
+
+    private function message($message)
+    {
+        $this->log->info('Deeployer: '.$message);
     }
 
 }
