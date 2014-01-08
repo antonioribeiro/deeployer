@@ -120,13 +120,11 @@ abstract class Deployer implements DeployerInterface {
         if ($project['composer_update'])
         {
             $this->message('executing composer update...');
-            $this->composer->update();
-        }
 
-        if ($project['composer_optimize'])
-        {
-            $this->message('executing composer dump-autoload --optimize...');
-            $this->composer->dumpOptimized(); 
+            $this->composer->update(
+                                        $project['composer_optimize_autoload'], 
+                                        $project['composer_extra_options']
+                                    );
         }
 
         $this->logMessages($this->composer->getMessages());

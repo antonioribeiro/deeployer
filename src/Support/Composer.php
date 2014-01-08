@@ -23,9 +23,11 @@ namespace PragmaRX\Deeployer\Support;
 
 class Composer extends Remote {
 
-    public function update($extra = '')
+    public function update($optimize = false, $extra = '')
     {
-        $this->command("composer update $extra");
+        $optimize = $optimize ? ' --optimize-autoloader ' : '';
+
+        $this->command("composer update $optimize $extra");
     }
 
     public function dumpAutoload($extra = '')

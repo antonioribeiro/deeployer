@@ -38,7 +38,9 @@ return array(
 
                                     'composer_update' => true,
 
-                                    'composer_optimize' => true,
+                                    'composer_optimize_autoload' => true,
+
+                                    'composer_extra_options' => '',
 
                                     'artisan_migrate' => false,
                                 ),
