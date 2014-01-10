@@ -8,6 +8,13 @@ Deployment via git webhooks is a common functionallity of most PaaS these days. 
 
 Since this package uses Laravel remote (SSH-2) functionality to remote or locally deploy applications, your deployment app can be in one server and deploy applications to others, as many as you need.
 
+#### Compatibility
+
+This package currently works with
+
+- Github
+- Bitbucket
+
 ### Usage
 
 Define an url for your deployer to be used, in Github you can find this at Settings > Service Hooks > WebHook URLs > URL, example:
@@ -111,9 +118,10 @@ artisan config:publish pragmarx/deeployer
 
 ### TODO
 
-- Bitbucket is not done yet.
 - Create a deployment artisan command, to manually deploy something troubled.
 - Tests, tests, tests.
+
+- Bitbucket is not done yet. (DONE!)
 
 ### Author
 
