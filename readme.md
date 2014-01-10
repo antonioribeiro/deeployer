@@ -10,7 +10,7 @@ Since this package uses Laravel remote (SSH-2) functionality to remote or locall
 
 ### Usage
 
-Define an url for your deployer to be used, in Github you can find this at `Settings > Service Hooks > WebHook URLs > URL`, example:
+Define an url for your deployer to be used, in Github you can find this at Settings > Service Hooks > WebHook URLs > URL, example:
 
 ```
 http://deployer.yoursite.io/deploy
@@ -25,12 +25,12 @@ Route::post('deploy', function()
 });
 ```
 
-Edit the file `app/config/packages/pragmarx/deeployer/config.php` and create your projects. In my opinion, is better to not use the master branch when you  :
+Edit the file `app/config/packages/pragmarx/deeployer/config.php` and create your projects. In my opinion, is better to not use the `master` branch while automatically deploying apps:
 
 ```
 'projects' => array(
                         array(
-                                'ssh_connection' => 'staging',
+                                'ssh_connection' => 'yoursite-staging',
 
                                 'git_repository' => 'https://github.com/yourname/yoursite.io',
 
@@ -55,6 +55,22 @@ Edit the file `app/config/packages/pragmarx/deeployer/config.php` and create you
                     ),
 ```
 
+Create the remote connection by editing `app/config/remote.php`:
+
+```
+	'connections' => array(
+
+		'yoursite-staging' => array(
+			'host'     => 'yoursite.com:22', <-- you can set a different SSH port if you need 
+			'username' => 'root',            <-- the user you use to deploy applications on your server
+			'password' => 'Bassw0rt',
+			'key'      => '',                <-- key files are safer than passwords
+			'root'     => '/var/www',        <-- you can ignore this, deployment path will be changed by Deeployer
+		),
+
+	),
+```
+
 Go to your server and `tail` the log file:
 
 ```
@@ -64,7 +80,9 @@ php artisan tail
 Add that url to Github and push something to your branch to automatically deploy your application:
 
 ```
+git pull origin master:testing
 git pull origin master:staging
+git pull origin master:production
 ```
 
 ### Installation
