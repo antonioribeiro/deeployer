@@ -59,8 +59,6 @@ class ServiceProvider extends IlluminateServiceProvider {
 
         $this->registerComposer();
 
-        $this->registerRemote();
-
         $this->registerArtisan();
 
         $this->registerGithub();
@@ -103,14 +101,6 @@ class ServiceProvider extends IlluminateServiceProvider {
         $this->app['deeployer.config'] = $this->app->share(function($app)
         {
             return new Config($app['deeployer.fileSystem'], $app);
-        });
-    }
-
-    private function registerRemote()
-    {
-        $this->app['deeployer.remote'] = $this->app->share(function($app)
-        {
-            return new Remote($app);
         });
     }
 
