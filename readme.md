@@ -1,6 +1,6 @@
 # Deeployer v0.8.0
 
-[![Latest Stable Version](https://poser.pugx.org/pragmarx/deeployer/v/stable.png)](https://packagist.org/packages/pragmarx/deeployer) [![Build Status](https://travis-ci.org/antonioribeiro/deeployer.png)](https://travis-ci.org/antonioribeiro/deeployer)
+[![Latest Stable Version](https://poser.pugx.org/pragmarx/deeployer/v/stable.png)](https://packagist.org/packages/pragmarx/deeployer)
 
 #### Automatically deploy Laravel applications every time it's pushed to the remote repository
 
@@ -32,13 +32,13 @@ Edit the file `app/config/packages/pragmarx/deeployer/config.php` and create you
                         array(
                                 'ssh_connection' => 'staging',
 
-                                'git_repository' => 'https://github.com/antonioribeiro/yoursite.io',
+                                'git_repository' => 'https://github.com/yourname/yoursite.io',
 
                                 'git_remote' => 'origin',
 
                                 'git_branch' => 'staging',
 
-                                'remote_directory' => '/var/www/vhosts/antoniocarlosribeiro.com/yoursite.io/staging/',
+                                'remote_directory' => '/var/www/vhosts/yoursite.io/staging/',
 
                                 'composer_update' => true,
 
