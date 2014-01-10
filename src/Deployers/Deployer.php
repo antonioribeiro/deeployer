@@ -33,7 +33,7 @@ use Illuminate\Log\Writer;
 
 abstract class Deployer implements DeployerInterface {
 
-    private $payload;
+    protected $payload;
 
     private $config;
 
