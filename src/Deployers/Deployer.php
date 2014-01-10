@@ -75,12 +75,12 @@ abstract class Deployer implements DeployerInterface {
  
         foreach($this->config->get('projects') as $project)
         {
-            if ($project['repository'] == $repository && $project['branch'] == $branch)
+            if ($project['git_repository'] == $repository && $project['git_branch'] == $branch)
             {
                 $this->message(sprintf(
                                         'deploying repository: %s branch: %s', 
-                                        $project['repository'], 
-                                        $project['branch']
+                                        $project['git_repository'], 
+                                        $project['git_branch']
                                      )
                                 );
 
@@ -88,7 +88,7 @@ abstract class Deployer implements DeployerInterface {
             }
         }
     }
-
+ 
     public function executeAll($project)
     {
         $this->runGit($project);
@@ -102,11 +102,11 @@ abstract class Deployer implements DeployerInterface {
     {
         $this->git->setConnection($project['ssh_connection']);
 
-        $this->git->setDirectory($project['directory']);
+        $this->git->setDirectory($project['remote_directory']);
 
         $this->message('executing git pull...');
 
-        $this->git->pull($project['remote'], $project['branch']);
+        $this->git->pull($project['git_remote'], $project['git_branch']);
 
         $this->logMessages($this->git->getMessages());
     }
@@ -115,7 +115,7 @@ abstract class Deployer implements DeployerInterface {
     {
         $this->composer->setConnection($project['ssh_connection']);
 
-        $this->composer->setDirectory($project['directory']);
+        $this->composer->setDirectory($project['remote_directory']);
 
         if ($project['composer_update'])
         {
@@ -139,7 +139,7 @@ abstract class Deployer implements DeployerInterface {
 
         $this->artisan->setConnection($project['ssh_connection']);
 
-        $this->artisan->setDirectory($project['directory']);
+        $this->artisan->setDirectory($project['remote_directory']);
 
         $this->message('executing artisan migrate...');
 

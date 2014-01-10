@@ -26,15 +26,15 @@ return array(
 
     'projects' => array(
                             array(
-                                    'ssh_connection' => 'production',
+                                    'ssh_connection' => 'staging',
 
-                                    'repository' => 'https://github.com/antonioribeiro/deeployer',
+                                    'git_repository' => 'https://github.com/antonioribeiro/acr.com',
 
-                                    'remote' => 'origin',
+                                    'git_remote' => 'origin',
 
-                                    'branch' => 'master',
+                                    'git_branch' => 'staging',
 
-                                    'directory' => '/tmp/deeployer',
+                                    'remote_directory' => '/var/www/vhosts/antoniocarlosribeiro.com/acr.com/staging/',
 
                                     'composer_update' => true,
 
@@ -43,6 +43,10 @@ return array(
                                     'composer_extra_options' => '',
 
                                     'artisan_migrate' => false,
+
+                                    'post_deploy_commands' => array(
+                                                                        'bash database.restore.sh'
+                                                                    ),
                                 ),
                         ),
 );
