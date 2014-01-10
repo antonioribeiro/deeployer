@@ -80,13 +80,11 @@ abstract class Deployer implements DeployerInterface {
 
     protected function execute()
     {
-        $repository = $this->payload->repository->url;
+        $repository = $this->getRepositoryUrl();
 
-        $branch = basename( $this->payload->ref );
- 
         foreach($this->config->get('projects') as $project)
         {
-            if ($project['git_repository'] == $repository && $project['git_branch'] == $branch)
+            if ($project['git_repository'] == $repository && $project['git_branch'] == $this->getBranch())
             {
                 $this->message(sprintf(
                                         'deploying repository: %s branch: %s', 
