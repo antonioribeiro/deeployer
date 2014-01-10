@@ -25,16 +25,14 @@ namespace PragmaRX\Deeployer\Deployers;
 
 class Github extends Deployer {
 
-	private function getBranch()
+	public function getBranch()
 	{
 		return basename( $this->payload->ref );
 	}
 
-	private function getRepositoryUrl()
+	public function getRepositoryUrl()
 	{
 		return $this->payload->repository->url;
 	}
-
-	
 
 }

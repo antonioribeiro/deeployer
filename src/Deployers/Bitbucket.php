@@ -25,12 +25,12 @@ namespace PragmaRX\Deeployer\Deployers;
 
 class Bitbucket extends Deployer {
 
-	private function getBranch()
+	public function getBranch()
 	{
 		return basename( $this->payload->branch );
 	}
 
-	private function getRepositoryUrl()
+	public function getRepositoryUrl()
 	{
 		return $this->payload->canon_url . $this->payload->absolute_url;
 	}

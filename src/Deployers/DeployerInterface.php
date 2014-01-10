@@ -25,8 +25,8 @@ interface DeployerInterface {
 
     public function deploy($payload);
 
-	private function getBranch();
+	public function getBranch();
 
-	private function getRepositoryUrl();
-		
+	public function getRepositoryUrl();
+
 }
