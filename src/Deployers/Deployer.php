@@ -96,6 +96,8 @@ abstract class Deployer implements DeployerInterface {
         $this->runComposer($project);
 
         $this->runArtisan($project);
+
+        $this->runPostDeployCommands($project);
     }
 
     protected function runGit($project)
@@ -148,6 +150,22 @@ abstract class Deployer implements DeployerInterface {
         $this->logMessages($this->artisan->getMessages());
     }
 
+    protected function runPostDeployCommands($project)
+    {
+        $this->remote->setConnection($project['ssh_connection']);
+
+        $this->remote->setDirectory($project['remote_directory']);
+
+        foreach($project['post_deploy_commands'] as $command)
+        {
+            $this->message('executing post deploy command: '.$command);
+
+            $this->remote->command($command);
+        }
+
+        $this->logMessages($this->remote->getMessages());
+    }
+    
     public function getMessages()
     {
         return $this->messages;

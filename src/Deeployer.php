@@ -71,9 +71,10 @@ class Deeployer
 
     public function run()
     {
-        $service = $this->getServiceName();
-
-        $service->deploy($this->payload);
+        if ($service = $this->getService())
+        {
+            $service->deploy($this->payload);
+        }
     }
 
     protected function decodePayload($payload)
@@ -81,7 +82,7 @@ class Deeployer
         return json_decode( $payload );
     }
 
-    public function getServiceName()
+    public function getService()
     {
         if (strpos($this->payload->repository->url, 'github') > 0)
         {
