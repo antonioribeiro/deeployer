@@ -45,9 +45,18 @@ abstract class Deployer implements DeployerInterface {
 
     private $artisan;
 
-    private $messages;
+    private $remote;
 
-    public function __construct(Config $config, Writer $log, Git $git, Composer $composer, Artisan $artisan)
+    private $messages = array();
+
+    public function __construct(
+                                    Config $config, 
+                                    Writer $log, 
+                                    Git $git, 
+                                    Composer $composer, 
+                                    Artisan $artisan,
+                                    Remote $remote
+                                )
     {
         $this->config = $config;
 
@@ -58,6 +67,8 @@ abstract class Deployer implements DeployerInterface {
         $this->composer = $composer;
 
         $this->artisan = $artisan;
+
+        $this->remote = $remote;
     }
 
     public function deploy($payload)
@@ -165,7 +176,7 @@ abstract class Deployer implements DeployerInterface {
 
         $this->logMessages($this->remote->getMessages());
     }
-    
+
     public function getMessages()
     {
         return $this->messages;

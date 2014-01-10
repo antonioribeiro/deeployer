@@ -59,6 +59,8 @@ class ServiceProvider extends IlluminateServiceProvider {
 
         $this->registerComposer();
 
+        $this->registerRemote();
+
         $this->registerArtisan();
 
         $this->registerGithub();
@@ -120,6 +122,14 @@ class ServiceProvider extends IlluminateServiceProvider {
         });
     }
 
+    private function registerRemote()
+    {
+        $this->app['deeployer.remote'] = $this->app->share(function($app)
+        {
+            return new Remote($app);
+        });
+    }
+
     private function registerArtisan()
     {
         $this->app['deeployer.artisan'] = $this->app->share(function($app)
@@ -145,7 +155,8 @@ class ServiceProvider extends IlluminateServiceProvider {
                                 $app['log'], 
                                 $app['deeployer.git'], 
                                 $app['deeployer.composer'],
-                                $app['deeployer.artisan']
+                                $app['deeployer.artisan'],
+                                $app['deeployer.remote']
                             );
         });
     }
@@ -159,7 +170,8 @@ class ServiceProvider extends IlluminateServiceProvider {
 	                                $app['log'], 
                                     $app['deeployer.git'],
                                     $app['deeployer.composer'],
-                                    $app['deeployer.artisan']
+                                    $app['deeployer.artisan'],
+                                    $app['deeployer.remote']
                                 );
         });
     }
