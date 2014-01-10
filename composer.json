@@ -1,7 +1,7 @@
 {
     "name": "pragmarx/deeployer",
 
-    "description": "A Laravel 4.1+ automatica deployment package via git webhooks",
+    "description": "A Laravel 4.1+ automatic application deployment package via git webhooks",
 
     "keywords": ["deploy", "deployment", "laravel"],
 
