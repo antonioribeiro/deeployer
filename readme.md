@@ -103,7 +103,7 @@ Once this operation completes, add the service provider to your app/config/app.p
 'PragmaRX\Deeployer\Vendor\Laravel\ServiceProvider',
 ```
 
-Publish the configuration file:
+Publish and edit the configuration file:
 
 ```
 artisan config:publish pragmarx/deeployer
