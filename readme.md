@@ -102,7 +102,23 @@ git pull origin master:production
 
 #### Installing
 
-`composer require pragmarx/deeployer dev-master`
+First, you need to be sure you have a Composer that supports PSR-4, so execute
+
+```
+composer --self-update
+```
+
+or
+
+```
+sudo composer --self-update
+```
+
+Require the Deeployer package:
+
+```
+composer require pragmarx/deeployer dev-master
+```
 
 Once this operation completes, add the service provider to your app/config/app.php:
 
