@@ -84,12 +84,12 @@ class Deeployer
 
     public function getService()
     {
-        if (strpos($this->payload->repository->url, 'github') > 0)
+        if ($this->github->payloadIsFromGithub($this->payload))
         {
             return $this->github;
         }
-        else
-        if (strpos($this->payload->repository->url, 'bitbucket') > 0)
+
+        if ($this->bitbucket->payloadIsFromBitbucket($this->payload))
         {
             return $this->bitbucket;
         }

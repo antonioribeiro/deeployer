@@ -82,6 +82,8 @@ abstract class Deployer implements DeployerInterface {
     {
         $repository = $this->getRepositoryUrl();
 
+        $this->message(sprintf('POST received for "%s" branch "%s"', $this->getRepositoryUrl(), $this->getBranch()));
+
         foreach($this->config->get('projects') as $project)
         {
             if ($project['git_repository'] == $repository && $project['git_branch'] == $this->getBranch())
@@ -190,7 +192,11 @@ abstract class Deployer implements DeployerInterface {
 
     private function message($message)
     {
-        $this->log->info('Deeployer: '.$message);
+        $this->log->info(sprintf('Deeployer - %s: %s', $this->getServiceName(), $message));
     }
 
+    public function getServiceName()
+    {
+        return $this->serviceName;
+    }
 }

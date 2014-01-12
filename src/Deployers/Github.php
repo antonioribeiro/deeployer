@@ -25,6 +25,8 @@ namespace PragmaRX\Deeployer\Deployers;
 
 class Github extends Deployer {
 
+	protected $serviceName = 'Github';
+
 	/**
 	 * Get branch name
 	 * 
@@ -43,6 +45,17 @@ class Github extends Deployer {
 	public function getRepositoryUrl()
 	{
 		return $this->payload->repository->url;
+	}
+
+	/**
+	 * Check if the payload is from Github
+	 * @param  string $payload 
+	 * @return boolean
+	 */
+	public function payloadIsFromGithub($payload)
+	{
+		return isset($payload->repository->url) && 
+		   		strpos($payload->repository->url, 'github') > 0;
 	}
 
 }
