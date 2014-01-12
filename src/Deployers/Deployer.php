@@ -86,7 +86,7 @@ abstract class Deployer implements DeployerInterface {
 
         foreach($this->config->get('projects') as $project)
         {
-            if ($project['git_repository'] == $repository && $project['git_branch'] == $this->getBranch())
+            if ($this->repositoryEquals($project['git_repository']) && $project['git_branch'] == $this->getBranch())
             {
                 $this->message(sprintf(
                                         'deploying repository: %s branch: %s', 
@@ -198,5 +198,12 @@ abstract class Deployer implements DeployerInterface {
     public function getServiceName()
     {
         return $this->serviceName;
+    }
+
+    private function repositoryEquals($repository)
+    {
+        $repository .= (substr($repository, -1) == '/' ? '' : '/');
+
+        return $repository == $this->getRepositoryUrl();
     }
 }
