@@ -71,10 +71,9 @@ class Deeployer
 
     public function run()
     {
-        if ($service = $this->getService())
-        {
-            $service->deploy($this->payload);
-        }
+        $service = $this->getServiceName();
+
+        $service->deploy($this->payload);
     }
 
     protected function decodePayload($payload)
@@ -82,18 +81,19 @@ class Deeployer
         return json_decode( $payload );
     }
 
-    public function getService()
+    public function getServiceName()
     {
-        if (strpos($this->payload->repository->url, 'github') > 0)
-        {
+    	if ($this->github->payloadIsFromGithub($this->payload))
+    	{
             return $this->github;
-        }
-        else
-        if (strpos($this->payload->repository->url, 'bitbucket') > 0)
-        {
-            return $this->bitbucket;
-        }
+    	}
+
+    	if ($this->github->payloadIsFromBitbucket($this->payload))
+    	{
+	        return $this->bitbucket;
+	    }
 
         return false;
     }
+
 }

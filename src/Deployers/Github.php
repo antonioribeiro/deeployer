@@ -45,4 +45,15 @@ class Github extends Deployer {
 		return $this->payload->repository->url;
 	}
 
+	/**
+	 * Check if the payload is from Github
+	 * @param  string $payload 
+	 * @return boolean
+	 */
+	public function payloadIsFromGithub($payload)
+	{
+		return isset($payload->repository->url) && 
+		   		strpos($payload->repository->url, 'github') > 0;
+	}
+
 }

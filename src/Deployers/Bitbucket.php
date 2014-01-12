@@ -45,4 +45,8 @@ class Bitbucket extends Deployer {
 		return $this->payload->canon_url . $this->payload->absolute_url;
 	}
 
+	public function payloadIsFromBitbucket($payload)
+	{
+		return isset($payload->canon_url) and $payload->canon_url == "https://bitbucket.org";
+	}
 }
