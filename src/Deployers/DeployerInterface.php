@@ -23,10 +23,25 @@ namespace PragmaRX\Deeployer\Deployers;
 
 interface DeployerInterface {
 
+	/**
+	 * Deploy application
+	 * 
+	 * @return string
+	 */
     public function deploy($payload);
 
+	/**
+	 * Get branch name
+	 * 
+	 * @return string
+	 */
 	public function getBranch();
 
+	/**
+	 * Get repository full URL
+	 * 
+	 * @return string
+	 */
 	public function getRepositoryUrl();
 
 }
