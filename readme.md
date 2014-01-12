@@ -84,13 +84,17 @@ Go to your server and `tail` the log file:
 php artisan tail
 ```
 
-Add that url to Github and push something to your branch to automatically deploy your application:
+Add that url to Github or Bitbucket.
+
+Push something to your branch to automatically deploy your application:
 
 ```
 git pull origin master:testing
 git pull origin master:staging
 git pull origin master:production
 ```
+
+If you are just testing, in Github you can press 'Test Hook' button, after saving your URL.
 
 ### Installation
 
