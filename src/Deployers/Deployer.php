@@ -84,6 +84,8 @@ abstract class Deployer implements DeployerInterface {
 
         $this->message(sprintf('POST received for "%s" branch "%s"', $this->getRepositoryUrl(), $this->getBranch()));
 
+        $found = 0;
+
         foreach($this->config->get('projects') as $project)
         {
             if ($this->repositoryEquals($project['git_repository']) && $project['git_branch'] == $this->getBranch())
@@ -96,7 +98,14 @@ abstract class Deployer implements DeployerInterface {
                                 );
 
                 $this->executeAll($project);
+
+                $found++;
             }
+        }
+
+        if ($found === 0)
+        {
+            $this->message('No repositories found. Please check the repository and branch names.');
         }
     }
  
