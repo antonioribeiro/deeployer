@@ -49,6 +49,6 @@ interface DeployerInterface {
 	 * 
 	 * @return string
 	 */
-	public function getServiceName()
+	public function getServiceName();
 
 }
