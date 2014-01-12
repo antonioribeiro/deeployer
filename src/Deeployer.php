@@ -66,14 +66,26 @@ class Deeployer
 
         $this->bitbucket = $bitbucket;
 
-        $this->payload = $this->decodePayload($this->request->get('payload'));
+        $this->originalPayload = $this->request->get('payload');
+
+        $this->payload = $this->decodePayload($this->originalPayload);
     }
 
     public function run()
     {
+        if ( ! isset($this->payload))
+        {
+            $this->message('payload received was empty.');
+        }
+        else
         if ($service = $this->getService())
         {
             $service->deploy($this->payload);
+        }
+        else
+        {
+            $this->message('service not found.');
+            $this->message('payload received: '.$this->originalPayload);
         }
     }
 
@@ -96,4 +108,9 @@ class Deeployer
 
         return false;
     }
+
+    private function message($message)
+    {
+        $this->log->info(sprintf('Deeployer: %s', $message));
+    }    
 }
