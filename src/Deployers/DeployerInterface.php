@@ -44,4 +44,11 @@ interface DeployerInterface {
 	 */
 	public function getRepositoryUrl();
 
+	/**
+	 * Get the service name
+	 * 
+	 * @return string
+	 */
+	public function getServiceName()
+
 }
