@@ -42,6 +42,8 @@ return array(
 
                                     'composer_extra_options' => '',
 
+                                    'composer_timeout' => 60 * 5, // 5 minutes
+
                                     'artisan_migrate' => false,
 
                                     'post_deploy_commands' => array(

@@ -65,14 +65,19 @@ class Deeployer
         $this->github = $github;
 
         $this->bitbucket = $bitbucket;
-
-        $this->originalPayload = $this->request->get('payload');
-
-        $this->payload = $this->decodePayload($this->originalPayload);
     }
 
     public function run()
     {
+        $this->originalPayload = $this->request->get('payload');
+
+        $this->payload = $this->decodePayload($this->originalPayload);
+
+        if ( ! $this->request->has('payload'))
+        {
+            $this->message('no payload was sent in the POST.');
+        }
+        else
         if ( ! isset($this->payload))
         {
             $this->message('payload received was empty.');

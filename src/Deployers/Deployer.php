@@ -143,10 +143,14 @@ abstract class Deployer implements DeployerInterface {
         {
             $this->message('executing composer update...');
 
+            $this->iniSetConfig('max_execution_time', 'composer_timeout');
+
             $this->composer->update(
                                         $project['composer_optimize_autoload'], 
                                         $project['composer_extra_options']
                                     );
+
+            $this->iniRestoreConfig('max_execution_time');
         }
 
         $this->logMessages($this->composer->getMessages());
@@ -215,4 +219,17 @@ abstract class Deployer implements DeployerInterface {
 
         return $repository == $this->getRepositoryUrl();
     }
+
+    private function iniSetConfig($phpKey, $configKey)
+    {
+        $this->iniConfig[$phpKey] = ini_get($phpKey);
+
+        ini_set($phpKey, $this->config->get($configKey));
+    }
+
+    public function iniRestoreConfig($phpKey)
+    {
+        ini_set($phpKey, $this->iniConfig[$phpKey]);
+    }
+
 }
