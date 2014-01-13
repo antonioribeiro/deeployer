@@ -111,13 +111,13 @@ If you are just testing, in Github you can press 'Test Hook' button, after savin
 First, you need to be sure you have a Composer that supports PSR-4, so execute
 
 ```
-composer --self-update
+composer self-update
 ```
 
 or
 
 ```
-sudo composer --self-update
+sudo composer self-update
 ```
 
 Require the Deeployer package:
