@@ -217,7 +217,10 @@ abstract class Deployer implements DeployerInterface {
     {
         $repository .= (substr($repository, -1) == '/' ? '' : '/');
 
-        return $repository == $this->getRepositoryUrl();
+        $my = $this->getRepositoryUrl();
+        $my .= (substr($my, -1) == '/' ? '' : '/');
+
+        return $repository == $my;
     }
 
     private function iniSetConfig($phpKey, $configKey)
