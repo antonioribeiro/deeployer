@@ -34,6 +34,8 @@ return array(
 
                                     'git_branch' => 'staging',
 
+                                    'git_force_pull' => false,
+
                                     'remote_directory' => '/var/www/vhosts/antoniocarlosribeiro.com/acr.com/staging/',
 
                                     'composer_update' => true,
