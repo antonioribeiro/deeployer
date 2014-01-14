@@ -27,9 +27,21 @@ class Git extends Remote {
 
     public function pull($remote, $branch, $force = false)
     {
-    	$force = $force ? '--force' : '';
+        if( ! $force)
+        {
+        	// Do a normal git pull origin master
+        	$this->command("git pull $remote $branch");	
+        }
+        else
+        {
+        	// There is not really a git pull --force, it's not safe, so...
+        	// 
+        	// Fetch branch to FETCH_HEAD.
+        	$this->command("git fetch $remote $branch");		
 
-        $this->command("git pull $remote $branch $force");
+        	// Force state to FETCH_HEAD, all changes to files are lost here.
+        	$this->command("git reset --hard FETCH_HEAD");	
+        }
     }
     
 }
