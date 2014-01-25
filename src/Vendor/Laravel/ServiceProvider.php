@@ -2,8 +2,8 @@
  
 use PragmaRX\Deeployer\Deeployer;
 
-use PragmaRX\Deeployer\Support\Config;
-use PragmaRX\Deeployer\Support\Filesystem;
+use PragmaRX\Support\ServiceProvider as PragmaRXServiceProvider;
+
 use PragmaRX\Deeployer\Support\Remote;
 use PragmaRX\Deeployer\Support\Composer;
 use PragmaRX\Deeployer\Support\Artisan;
@@ -12,34 +12,22 @@ use PragmaRX\Deeployer\Support\Git;
 use PragmaRX\Deeployer\Deployers\Github;
 use PragmaRX\Deeployer\Deployers\Bitbucket;
 
-use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
-use Illuminate\Foundation\AliasLoader as IlluminateAliasLoader;
+class ServiceProvider extends PragmaRXServiceProvider {
 
-class ServiceProvider extends IlluminateServiceProvider {
+    protected $packageVendor = 'pragmarx';
+    protected $packageVendorCapitalized = 'PragmaRX';
 
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
+    protected $packageName = 'deeployer';
+    protected $packageNameCapitalized = 'Deeployer';
 
     /**
-     * Bootstrap the application events.
+     * This is the boot method for this ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function wakeUp()
     {
-        $this->package('pragmarx/deeployer', 'pragmarx/deeployer', __DIR__.'/../..');
 
-        if( $this->getConfig('create_deeployer_alias') )
-        {
-            IlluminateAliasLoader::getInstance()->alias(
-                                                            $this->getConfig('deeployer_alias'), 
-                                                            'PragmaRX\Deeployer\Vendor\Laravel\Facade'
-                                                        );
-        }    
     }
 
     /**
@@ -49,9 +37,7 @@ class ServiceProvider extends IlluminateServiceProvider {
      */
     public function register()
     {
-        $this->registerFileSystem();
-
-        $this->registerConfig();
+        $this->preRegister();
 
         $this->registerRemote();
 
@@ -75,35 +61,14 @@ class ServiceProvider extends IlluminateServiceProvider {
      */
     public function provides()
     {
-        return array();
+        return array('deeployer');
     }
 
     /**
-     * Register the Filesystem driver used by Deeployer
+     * Register the Composer driver
      * 
-     * @return void
+     * @return void 
      */
-    private function registerFileSystem()
-    {
-        $this->app['deeployer.fileSystem'] = $this->app->share(function($app)
-        {
-            return new Filesystem;
-        });
-    }
-
-    /**
-     * Register the Config driver used by Deeployer
-     * 
-     * @return void
-     */
-    private function registerConfig()
-    {
-        $this->app['deeployer.config'] = $this->app->share(function($app)
-        {
-            return new Config($app['deeployer.fileSystem'], $app);
-        });
-    }
-
     private function registerComposer()
     {
         $this->app['deeployer.composer'] = $this->app->share(function($app)
@@ -112,6 +77,11 @@ class ServiceProvider extends IlluminateServiceProvider {
         });
     }
 
+    /**
+     * Register the Remote driver
+     * 
+     * @return void
+     */
     private function registerRemote()
     {
         $this->app['deeployer.remote'] = $this->app->share(function($app)
@@ -120,6 +90,11 @@ class ServiceProvider extends IlluminateServiceProvider {
         });
     }
 
+    /**
+     * Register the Artisan driver
+     * 
+     * @return void
+     */
     private function registerArtisan()
     {
         $this->app['deeployer.artisan'] = $this->app->share(function($app)
@@ -128,6 +103,11 @@ class ServiceProvider extends IlluminateServiceProvider {
         });
     }
 
+    /**
+     * Register the Git driver
+     * 
+     * @return void
+     */
     private function registerGit()
     {
         $this->app['deeployer.git'] = $this->app->share(function($app)
@@ -136,6 +116,11 @@ class ServiceProvider extends IlluminateServiceProvider {
         });
     }
 
+    /**
+     * Register the Github driver
+     * 
+     * @return void
+     */
     private function registerGithub()
     {
         $this->app['deeployer.github'] = $this->app->share(function($app)
@@ -151,6 +136,11 @@ class ServiceProvider extends IlluminateServiceProvider {
         });
     }
 
+    /**
+     * Register the Bitbucket driver
+     * 
+     * @return void
+     */
     private function registerBitbucket()
     {
         $this->app['deeployer.bitbucket'] = $this->app->share(function($app)
@@ -189,13 +179,12 @@ class ServiceProvider extends IlluminateServiceProvider {
     }
 
     /**
-     * Helper function to ease the use of configurations
+     * Get the root directory for this ServiceProvider
      * 
-     * @param  string $key configuration key
-     * @return string      configuration value
+     * @return string
      */
-    public function getConfig($key)
+    public function getRootDirectory()
     {
-        return $this->app['config']["pragmarx/deeployer::$key"];
-    }
+        return __DIR__.'/../..';
+    }    
 }
