@@ -23,11 +23,13 @@
 
 namespace PragmaRX\Deeployer\Deployers;
 
-use PragmaRX\Deeployer\Support\Config;
+use PragmaRX\Support\Config;
+
 use PragmaRX\Deeployer\Support\Git;
 use PragmaRX\Deeployer\Support\Composer;
 use PragmaRX\Deeployer\Support\Artisan;
 use PragmaRX\Deeployer\Support\Remote;
+use PragmaRX\Deeployer\Support\Process;
 
 use Illuminate\Log\Writer;
 
@@ -48,6 +50,8 @@ abstract class Deployer implements DeployerInterface {
     private $remote;
 
     private $messages = array();
+
+    private $envoyPath;
 
     public function __construct(
                                     Config $config, 
@@ -88,10 +92,12 @@ abstract class Deployer implements DeployerInterface {
 
         foreach($this->config->get('projects') as $project)
         {
-            if ($this->repositoryEquals($project['git_repository']) && $project['git_branch'] == $this->getBranch())
+            $project = $this->checkAttributes($project);
+
+            if ($this->repositoriesAreTheSame($project['git_repository']) && $project['git_branch'] == $this->getBranch())
             {
                 $this->message(sprintf(
-                                        'deploying repository: %s branch: %s', 
+                                        'deploying found repository: %s branch: %s',
                                         $project['git_repository'], 
                                         $project['git_branch']
                                      )
@@ -103,21 +109,45 @@ abstract class Deployer implements DeployerInterface {
             }
         }
 
+        if($this->config->get('envoy_pass_through'))
+        {
+            $task = sprintf('%s:%s', $this->getRepositoryUrl(), $this->getBranch());
+
+            $this->message('Executing Envoy pass-through: '.$task);
+
+            $this->envoyRunTask($this->config->get('envoy_user'), $task);
+        }
+
         if ($found === 0)
         {
             $this->message('No repositories found. Please check the repository and branch names.');
         }
     }
  
+    private function checkAttributes($project)
+    {
+        if(isset($project['git_repository'])) 
+        {
+            $project['git_repository'] = removeTrailingSlash($project['git_repository']);  
+        } 
+
+        return $project;
+    }
+
     public function executeAll($project)
     {
-        $this->runGit($project);
+        if (isset($project['ssh_connection']))
+        {
+            $this->runGit($project);
 
-        $this->runComposer($project);
+            $this->runComposer($project);
 
-        $this->runArtisan($project);
+            $this->runArtisan($project);
 
-        $this->runPostDeployCommands($project);
+            $this->runPostDeployCommands($project);
+        }
+
+        $this->runEnvoyTasks($project);
     }
 
     protected function runGit($project)
@@ -190,6 +220,94 @@ abstract class Deployer implements DeployerInterface {
         $this->logMessages($this->remote->getMessages());
     }
 
+    protected function runEnvoyTasks($project)
+    {
+        if ( ! isset($project['envoy_tasks']))
+        {
+            return;
+        }
+
+        if ( ! $this->envoyIsAvailable())
+        {
+            return;
+        }
+
+        foreach($project['envoy_tasks'] as $task)
+        {
+            $this->message('Running Envoy task '.$task);
+
+            if ( ! $this->envoyRunTask($project['envoy_user'] ?: $this->config->get('envoy_user'), $task))
+            {
+                break;
+            }
+        }
+    }
+
+    private function envoyIsAvailable()
+    {
+        $path = $this->config->get('envoy_executable_path');
+
+        if ($path == 'automatic' || empty($path))
+        {
+            $this->envoyPath = getExecutablePath('envoy');
+        }
+        else
+        {
+            $this->envoyPath = $path;
+        }
+
+        if ( ! empty($this->envoyPath))
+        {
+            if ( ! is_executable($this->envoyPath))
+            {
+                $this->message("Envoy file ($this->envoyPath) is not executable.");
+
+                $this->envoyPath = '';
+            }
+            else
+            {
+                $this->message('Using Envoy at: '.$this->envoyPath);
+            }
+        }
+        else
+        {
+            $this->message('Envoy was not found.');
+        }
+
+        return ! empty($this->envoyPath);
+    }
+
+    private function envoyRunTask($user, $task)
+    {
+        $command = $this->createEnvoyCommand($user);
+
+        $process = new Process($command." run $task");
+
+        $process->setTimeout(3600);
+
+        $process->run();
+
+        if ( ! $process->isSuccessful()) {
+            $this->message('Error executing Laravel Envoy: '.$process->getErrorOutput());
+
+            return false;
+        }        
+
+        return true;
+    }
+
+    private function createEnvoyCommand($user)
+    {
+        $command = $this->envoyPath;
+
+        if ( ! empty($user))
+        {
+            $command = sprintf('sudo -u %s %s', $user, $command);
+        }
+
+        return $command;
+    }
+
     public function getMessages()
     {
         return $this->messages;
@@ -213,14 +331,9 @@ abstract class Deployer implements DeployerInterface {
         return $this->serviceName;
     }
 
-    private function repositoryEquals($repository)
+    private function repositoriesAreTheSame($repository)
     {
-        $repository .= (substr($repository, -1) == '/' ? '' : '/');
-
-        $my = $this->getRepositoryUrl();
-        $my .= (substr($my, -1) == '/' ? '' : '/');
-
-        return $repository == $my;
+        return removeTrailingSlash($repository) == $this->getRepositoryUrl();
     }
 
     private function iniSetConfig($phpKey, $configKey)

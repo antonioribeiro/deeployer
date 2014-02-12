@@ -44,7 +44,7 @@ class Github extends Deployer {
 	 */
 	public function getRepositoryUrl()
 	{
-		return $this->payload->repository->url;
+		return removeTrailingSlash($this->payload->repository->url);
 	}
 
 	/**

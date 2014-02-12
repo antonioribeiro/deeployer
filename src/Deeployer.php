@@ -21,7 +21,7 @@
 
 namespace PragmaRX\Deeployer;
 
-use PragmaRX\Deeployer\Support\Config;
+use PragmaRX\Support\Config;
 
 use PragmaRX\Deeployer\Deployers\Github;
 use PragmaRX\Deeployer\Deployers\Bitbucket;

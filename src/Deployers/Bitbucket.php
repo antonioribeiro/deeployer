@@ -44,7 +44,7 @@ class Bitbucket extends Deployer {
 	 */
 	public function getRepositoryUrl()
 	{
-		return $this->payload->canon_url . $this->payload->repository->absolute_url;
+		return removeTrailingSlash($this->payload->canon_url . $this->payload->repository->absolute_url);
 	}
 
 	public function payloadIsFromBitbucket($payload)
