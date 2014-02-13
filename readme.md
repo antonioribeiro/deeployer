@@ -32,11 +32,13 @@ Route::post('deploy', function()
 });
 ```
 
-If you are using Laravel Envoy, install it and create your tasks using your project url and the branch:
+If you are using Laravel Envoy, install it and create tasks using your project url and the branch as the task name:
 
+```
 @task('https://github.com/you/repo-name:master', ['on' => ['localhost']])
     touch /tmp/envoy-passthrough.txt
 @endtask
+```
 
 And that's it, you're good to go! Configure your webook, push something and wait for it.
 
