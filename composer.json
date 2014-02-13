@@ -3,7 +3,7 @@
 
     "description": "A Laravel 4.1+ automatic application deployment package via git webhooks",
 
-    "keywords": ["deploy", "deployment", "laravel"],
+    "keywords": ["deploy", "deployment", "laravel", "envoy"],
 
     "license": "MIT",
 
@@ -11,7 +11,7 @@
         {
             "name": "Antonio Carlos Ribeiro",
             "email": "acr@antoniocarlosribeiro.com",
-            "role": "Creator & Designer"
+            "role": "Creator"
         }
     ],
 
@@ -23,7 +23,7 @@
     },
 
     "require-dev": {
-        "mockery/mockery": "0.8.0"
+        "mockery/mockery": "0.9.0"
     },
 
     "autoload": {
@@ -36,7 +36,7 @@
             "component": "package",
             "frameworks": ["Laravel 4"],
             "versions": {
-                    "0.8.0": "master"
+                    "0.9.0": "master"
             },
             "branch-alias": {
                     "dev-master": "0.8.0-dev"
