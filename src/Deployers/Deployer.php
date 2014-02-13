@@ -32,10 +32,13 @@ use PragmaRX\Deeployer\Support\Remote;
 use PragmaRX\Deeployer\Support\Process;
 
 use Illuminate\Log\Writer;
+use Illuminate\Foundation\Application;
 
 abstract class Deployer implements DeployerInterface {
 
     protected $payload;
+
+    private $app;
 
     private $config;
 
@@ -54,6 +57,7 @@ abstract class Deployer implements DeployerInterface {
     private $envoyPath;
 
     public function __construct(
+                                    Application $app, 
                                     Config $config, 
                                     Writer $log, 
                                     Git $git, 
@@ -62,6 +66,8 @@ abstract class Deployer implements DeployerInterface {
                                     Remote $remote
                                 )
     {
+        $this->app = $app;
+
         $this->config = $config;
 
         $this->log = $log;
@@ -117,7 +123,7 @@ abstract class Deployer implements DeployerInterface {
 
             $this->envoyRunTask($this->config->get('envoy_user'), $task);
         }
-
+        else
         if ($found === 0)
         {
             $this->message('No repositories found. Please check the repository and branch names.');
@@ -227,15 +233,8 @@ abstract class Deployer implements DeployerInterface {
             return;
         }
 
-        if ( ! $this->envoyIsAvailable())
-        {
-            return;
-        }
-
         foreach($project['envoy_tasks'] as $task)
         {
-            $this->message('Running Envoy task '.$task);
-
             if ( ! $this->envoyRunTask($project['envoy_user'] ?: $this->config->get('envoy_user'), $task))
             {
                 break;
@@ -266,7 +265,7 @@ abstract class Deployer implements DeployerInterface {
             }
             else
             {
-                $this->message('Using Envoy at: '.$this->envoyPath);
+                $this->message('Envoy executable found at: '.$this->envoyPath);
             }
         }
         else
@@ -279,13 +278,14 @@ abstract class Deployer implements DeployerInterface {
 
     private function envoyRunTask($user, $task)
     {
-        $command = $this->createEnvoyCommand($user);
+        if ( ! $this->envoyIsAvailable())
+        {
+            return;
+        }
 
-        $process = new Process($command." run $task");
+        $this->message('Running Envoy task '.$task);
 
-        $process->setTimeout(3600);
-
-        $process->run();
+        $process = $this->runProcess($user, $task);
 
         if ( ! $process->isSuccessful()) {
             $this->message('Error executing Laravel Envoy: '.$process->getErrorOutput());
@@ -294,6 +294,19 @@ abstract class Deployer implements DeployerInterface {
         }        
 
         return true;
+    }
+
+    private function runProcess($user, $task) 
+    {
+        $process = new Process($this->createEnvoyCommand($user)." run $task");
+
+        $process->setTimeout($this->config->get('envoy_timeout'));
+
+        $process->setWorkingDirectory($this->app->make('path.base'));
+
+        $process->run();
+
+        return $process;
     }
 
     private function createEnvoyCommand($user)

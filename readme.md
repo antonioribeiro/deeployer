@@ -1,4 +1,4 @@
-# Deeployer v0.8.0
+# Deeployer v0.9.0
 
 [![Latest Stable Version](https://poser.pugx.org/pragmarx/deeployer/v/stable.png)](https://packagist.org/packages/pragmarx/deeployer)
 
@@ -32,7 +32,15 @@ Route::post('deploy', function()
 });
 ```
 
-Edit the file `app/config/packages/pragmarx/deeployer/config.php` and create your projects. In my opinion, is better to not use the `master` branch while automatically deploying apps:
+If you are using Laravel Envoy, install it and create your tasks using your project url and the branch:
+
+@task('https://github.com/you/repo-name:master', ['on' => ['localhost']])
+    touch /tmp/envoy-passthrough.txt
+@endtask
+
+And that's it, you're good to go! Configure your webook, push something and wait for it.
+
+But if you prefer to use Deeployer own deployment system, edit the file `app/config/packages/pragmarx/deeployer/config.php` and create your projects. In my opinion, is better to not use the `master` branch while automatically deploying apps:
 
 ```
 'projects' => array(

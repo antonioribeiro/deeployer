@@ -24,33 +24,96 @@ return array(
 
     'deeployer_alias' => 'Deeployer',
 
+    /**
+     * Deeployer will try to find Envoy executable automatically, unless you need 
+     * to use a different one.
+     */
+
+    'envoy_executable_path' => 'automatic',
+
+    /**
+     * Pass Through mode let you define your tasks this way:
+     *
+     *   @task('https://<provider>/<vendor>/<repository>:<branch>', ['on' => ['localhost']])
+     *      ...
+     *   @endtask
+     * 
+     */
+    
+    'envoy_pass_through' => true,
+
+    /**
+     * Using webhooks usually makes apache or nginx user to be the one
+     * executing your scripts. If you need to deploy using a different
+     * user, like root, just set it in this variable.
+     *
+     * This can also be tricky, because apache and nginx might not have
+     * rights to impersonate (sudo) another user. So, it's possible you'll
+     * have to add something like this in your /etc/sudoers file:
+     *
+     *    www-data ALL=(ALL) NOPASSWD: /usr/local/bin/envoy
+     *   
+     */
+
+    'envoy_user' => '',
+
+    /**
+     * How much time should PHP wait for Envoy?
+     */
+
+    'envoy_timeout' => 3600,
+
+    /**
+     * 
+     */
+
     'projects' => array(
-                            array(
-                                    'ssh_connection' => 'staging',
+                            /**
+                             * This is an example for Deeployer using Envoy in normal mode 
+                             */
+                            
+                            // array(
+                            //         'git_repository' => 'https://bitbucket.org/antonioribeiro/conveniosaude/',
 
-                                    'git_repository' => 'https://github.com/antonioribeiro/acr.com',
+                            //         'git_remote' => 'origin',
 
-                                    'git_remote' => 'origin',
+                            //         'git_branch' => 'master',
 
-                                    'git_branch' => 'staging',
+                            //         'envoy_tasks' => array('deploy_conveniosaude'),
 
-                                    'git_force_pull' => false,
+                            //         'envoy_user' => 'root',
+                            // ),
 
-                                    'remote_directory' => '/var/www/vhosts/antoniocarlosribeiro.com/acr.com/staging/',
 
-                                    'composer_update' => true,
+                            /**
+                             * This is an example for those who don't want to use Envoy
+                             */
+                            // array(
+                            //         'ssh_connection' => 'staging',
 
-                                    'composer_optimize_autoload' => true,
+                            //         'git_repository' => 'https://github.com/antonioribeiro/acr.com',
 
-                                    'composer_extra_options' => '',
+                            //         'git_remote' => 'origin',
 
-                                    'composer_timeout' => 60 * 5, // 5 minutes
+                            //         'git_branch' => 'staging',
 
-                                    'artisan_migrate' => false,
+                            //         'git_force_pull' => false,
 
-                                    'post_deploy_commands' => array(
-                                                                        'bash database.restore.sh'
-                                                                    ),
-                                ),
+                            //         'remote_directory' => '/var/www/vhosts/antoniocarlosribeiro.com/acr.com/staging/',
+
+                            //         'composer_update' => true,
+
+                            //         'composer_optimize_autoload' => true,
+
+                            //         'composer_extra_options' => '',
+
+                            //         'composer_timeout' => 60 * 5, // 5 minutes
+
+                            //         'artisan_migrate' => false,
+
+                            //         'post_deploy_commands' => array(
+                            //                                             'bash database.restore.sh'
+                            //                                         ),
+                            //     ),
                         ),
 );

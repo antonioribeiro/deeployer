@@ -126,6 +126,7 @@ class ServiceProvider extends PragmaRXServiceProvider {
         $this->app['deeployer.github'] = $this->app->share(function($app)
         {
             return new Github(
+                                $app,
                                 $app['deeployer.config'], 
                                 $app['log'], 
                                 $app['deeployer.git'], 
@@ -146,6 +147,7 @@ class ServiceProvider extends PragmaRXServiceProvider {
         $this->app['deeployer.bitbucket'] = $this->app->share(function($app)
         {
             return new Bitbucket(
+                                    $app,
                                     $app['deeployer.config'], 
 	                                $app['log'], 
                                     $app['deeployer.git'],
