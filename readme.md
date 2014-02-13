@@ -15,7 +15,7 @@ This package currently works with
 - Github
 - Bitbucket
 
-### Usage
+### Using it with Laravel Envoy
 
 Define an url for your deployer to be used, in Github you can find this at Settings > Service Hooks > WebHook URLs > URL, example:
 
@@ -42,7 +42,9 @@ If you are using Laravel Envoy, install it and create tasks using your project u
 
 And that's it, you're good to go! Configure your webook, push something and wait for it.
 
-But if you prefer to use Deeployer own deployment system, edit the file `app/config/packages/pragmarx/deeployer/config.php` and create your projects. In my opinion, is better to not use the `master` branch while automatically deploying apps:
+### Normal Usage
+
+If you prefer to use Deeployer own deployment system, edit the file `app/config/packages/pragmarx/deeployer/config.php` and create your projects. In my opinion, is better to not use the `master` branch while automatically deploying apps:
 
 ```
 'projects' => array(
