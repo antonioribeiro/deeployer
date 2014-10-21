@@ -1,4 +1,4 @@
-# Deeployer v0.9.0
+# Deeployer
 
 [![Latest Stable Version](https://poser.pugx.org/pragmarx/deeployer/v/stable.png)](https://packagist.org/packages/pragmarx/deeployer)
 
