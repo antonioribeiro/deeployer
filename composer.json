@@ -19,7 +19,7 @@
         "php": ">=5.3.7",
         "illuminate/foundation": "4.*",
         "illuminate/support": "4.*",
-        "pragmarx/support": "0.3.2"
+        "pragmarx/support": "<0.5"
     },
 
     "require-dev": {
